@@ -2,15 +2,20 @@ const { execSync } = require("child_process");
 const fs = require("fs");
 
 // Configuration
-const MAX_COMMITS = 5; // Max commits per run
-const MIN_COMMITS = 1; // Min commits per run
+const MAX_COMMITS = 70; // Maximum commits per run
+const MIN_COMMITS = 60; // Minimum commits per run
 const FILE_NAME = "contribution.txt"; // File to modify
 const COMMIT_MESSAGES = [
-  "Updating progress 🚀",
-  "Refactoring some code ✨",
-  "Automated commit 🤖",
-  "Pushing updates 📌",
-  "Another day, another commit ⏳",
+  "Another contribution added! 🚀",
+  "Refactored some code 🛠️",
+  "Small tweak, big impact! ⚡",
+  "Improving GitHub stats 📈",
+  "Keep pushing forward! 🔥",
+  "Consistency is key! ✅",
+  "Committing to the grind! 💻",
+  "Automating progress! 🤖",
+  "More commits, more fun! 🎉",
+  "Daily streak maintained! 🔥",
 ];
 
 // Function to execute shell commands
@@ -46,7 +51,7 @@ const makeCommits = () => {
 
   // Push changes
   runCommand("git push origin main");
-  console.log("✅ All commits pushed successfully!");
+  console.log(`✅ ${commits} commits pushed successfully! 🚀`);
 };
 
 // Run script

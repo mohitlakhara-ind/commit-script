@@ -2,8 +2,8 @@ const { execSync } = require("child_process");
 const fs = require("fs");
 
 // Configuration
-const MAX_COMMITS = 75; // Maximum commits per run
-const MIN_COMMITS = 50; // Minimum commits per run
+const MAX_COMMITS = 85; // Maximum commits per run
+const MIN_COMMITS = 25; // Minimum commits per run
 const FILE_NAME = "contribution.txt"; // File to modify
 const COMMIT_MESSAGES = [
   "Another contribution added! 🚀",

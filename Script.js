@@ -58,6 +58,5 @@ const makeCommits = () => {
 makeCommits();
 
 //to run :
+// cd gith
 // node ./Script.js  
-// or
-// node ./gith/Script.js

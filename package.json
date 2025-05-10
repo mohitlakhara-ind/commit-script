@@ -1,0 +1,19 @@
+{
+  "name": "gith",
+  "version": "1.0.0",
+  "main": "Script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohitlakhara-ind/gith.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mohitlakhara-ind/gith/issues"
+  },
+  "homepage": "https://github.com/mohitlakhara-ind/gith#readme",
+  "description": ""
+}

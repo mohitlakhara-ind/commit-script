@@ -80,15 +80,16 @@ const makeCommits = async () => {
     });
 
     console.log(chalk.green(`✅ ${i}/${totalCommits}: ${msg} [${time}]`));
-
+    runCommand(`git push origin ${branch}`);
+    
     // 🔁 Add random delay between commits
     const delay = randInt(500, 3000); // 0.5s to 3s
+
     console.log(chalk.gray(`⏳ Waiting ${delay}ms before next commit...`));
     await sleep(delay);
   }
 
   if (!DRY_RUN) {
-    runCommand(`git push origin ${branch}`);
     console.log(chalk.bold.green(`🚀 All ${totalCommits} commits pushed to '${branch}'!`));
   } else {
     console.log(chalk.blue(`🧪 Dry run complete. No commits pushed.`));

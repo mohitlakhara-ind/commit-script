@@ -17,6 +17,6 @@
   "homepage": "https://github.com/mohitlakhara-ind/gith#readme",
   "description": "",
   "dependencies": {
-    "chalk": "^5.4.1"
+    "chalk": "^4.1.2"
   }
 }

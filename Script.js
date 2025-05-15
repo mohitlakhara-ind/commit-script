@@ -4,8 +4,8 @@ const path = require("path");
 const chalk = require("chalk");
 
 // 🎯 Config
-const MAX_COMMITS = 95;
-const MIN_COMMITS = 50;
+const MAX_COMMITS = 35;
+const MIN_COMMITS = 10;
 const FILE_NAME = "contribution.txt";
 const COMMIT_MESSAGES = [
   "Another contribution added! 🚀",
@@ -51,7 +51,6 @@ const getRandomPastDate = () => {
 
 // 🔁 Main Logic
 const makeCommits = async () => {
-  // Validate git repo
   try {
     runCommand("git rev-parse --is-inside-work-tree");
   } catch {
@@ -81,7 +80,11 @@ const makeCommits = async () => {
     });
 
     console.log(chalk.green(`✅ ${i}/${totalCommits}: ${msg} [${time}]`));
-    await sleep(100); // simulate slight delay
+
+    // 🔁 Add random delay between commits
+    const delay = randInt(500, 3000); // 0.5s to 3s
+    console.log(chalk.gray(`⏳ Waiting ${delay}ms before next commit...`));
+    await sleep(delay);
   }
 
   if (!DRY_RUN) {

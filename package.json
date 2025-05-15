@@ -15,5 +15,8 @@
     "url": "https://github.com/mohitlakhara-ind/gith/issues"
   },
   "homepage": "https://github.com/mohitlakhara-ind/gith#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "chalk": "^5.4.1"
+  }
 }

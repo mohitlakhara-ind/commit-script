@@ -33,6 +33,7 @@ const getRandomCommits = () =>
 
 // Function to create and commit changes
 const makeCommits = () => {
+
   const commits = getRandomCommits();
   console.log(`Generating ${commits} commits...`);
 

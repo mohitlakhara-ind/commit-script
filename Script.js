@@ -1,7 +1,7 @@
 const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
-const chalk = require("chalk"); // npm i chalk
+const chalk = require("chalk");
 
 // 🎯 Config
 const MAX_COMMITS = 95;
@@ -19,59 +19,78 @@ const COMMIT_MESSAGES = [
   "More commits, more fun! 🎉",
   "Daily streak maintained! 🔥",
 ];
+const DRY_RUN = process.argv.includes("--dry-run");
 
-// 📌 Helpers
-const runCommand = (cmd) => {
+// 📌 Helper to run shell commands
+const runCommand = (cmd, env = {}) => {
   try {
-    return execSync(cmd, { encoding: "utf-8", stdio: "pipe" }).trim();
-  } catch (e) {
-    console.error(chalk.red(`❌ Command failed: ${cmd}\n${e.message}`));
-    process.exit(1);
+    return execSync(cmd, { stdio: "pipe", encoding: "utf-8", env: { ...process.env, ...env } }).trim();
+  } catch (err) {
+    console.error(chalk.red(`❌ Failed: ${cmd}`));
+    console.error(chalk.gray(err.message));
+    if (!DRY_RUN) process.exit(1);
   }
 };
 
-const getRandomCommits = () =>
-  Math.floor(Math.random() * (MAX_COMMITS - MIN_COMMITS + 1)) + MIN_COMMITS;
+// 🎲 Random integer in range
+const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-// 👷 Main Logic
-const makeCommits = () => {
-  // Check if we're inside a git repo
+// ⏳ Pause for realism
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+
+// 🧠 Generate random date within the past few days
+const getRandomPastDate = () => {
+  const daysAgo = randInt(0, 5);
+  const hours = randInt(1, 23);
+  const minutes = randInt(0, 59);
+  const d = new Date();
+  d.setDate(d.getDate() - daysAgo);
+  d.setHours(hours, minutes, 0, 0);
+  return d.toISOString();
+};
+
+// 🔁 Main Logic
+const makeCommits = async () => {
+  // Validate git repo
   try {
     runCommand("git rev-parse --is-inside-work-tree");
   } catch {
-    console.error(chalk.red("🚫 Not inside a git repository!"));
+    console.log(chalk.red("🚫 This isn’t a Git repo!"));
     process.exit(1);
   }
 
-  // Auto-detect branch
   const branch = runCommand("git branch --show-current");
+  const totalCommits = randInt(MIN_COMMITS, MAX_COMMITS);
+  console.log(chalk.cyan(`💥 Generating ${totalCommits} commits on '${branch}'...`));
 
-  const commits = getRandomCommits();
-  console.log(chalk.cyan(`📦 Generating ${commits} commits on branch '${branch}'...`));
-
-  // Ensure the file exists
   const filePath = path.resolve(FILE_NAME);
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath, "");
-    console.log(chalk.yellow(`📄 Created ${FILE_NAME} file.`));
+    console.log(chalk.yellow(`📄 Created ${FILE_NAME}`));
   }
 
-  for (let i = 1; i <= commits; i++) {
-    const message =
-      COMMIT_MESSAGES[Math.floor(Math.random() * COMMIT_MESSAGES.length)];
-    const timestamp = new Date().toISOString();
+  for (let i = 1; i <= totalCommits; i++) {
+    const msg = COMMIT_MESSAGES[randInt(0, COMMIT_MESSAGES.length - 1)];
+    const time = getRandomPastDate();
+    fs.appendFileSync(filePath, `Commit #${i} at: ${time}\n`);
 
-    fs.appendFileSync(filePath, `Commit #${i} at: ${timestamp}\n`);
     runCommand("git add .");
-    runCommand(`git commit -m "${message}"`);
+    runCommand(`git commit -m "${msg}"`, {
+      GIT_AUTHOR_DATE: time,
+      GIT_COMMITTER_DATE: time,
+    });
 
-    console.log(chalk.green(`✅ Commit ${i}/${commits}: ${message}`));
+    console.log(chalk.green(`✅ ${i}/${totalCommits}: ${msg} [${time}]`));
+    await sleep(100); // simulate slight delay
   }
 
-  // Push
-  runCommand(`git push origin ${branch}`);
-  console.log(chalk.bold.green(`🚀 ${commits} commits pushed to '${branch}'!`));
+  if (!DRY_RUN) {
+    runCommand(`git push origin ${branch}`);
+    console.log(chalk.bold.green(`🚀 All ${totalCommits} commits pushed to '${branch}'!`));
+  } else {
+    console.log(chalk.blue(`🧪 Dry run complete. No commits pushed.`));
+  }
 };
 
-// Run
+// ⚙️ Run
 makeCommits();
